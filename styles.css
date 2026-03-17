@@ -172,11 +172,43 @@
     }
     .bottom-cta a:hover { background: #3a3029; }
 
+    /* Temporary animation switcher panel */
+    .animation-panel {
+      position: fixed;
+      top: 14px;
+      right: 14px;
+      z-index: 120;
+      background: rgba(255,255,255,.92);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px 12px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+    .animation-panel label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 11px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #6f5a49;
+      font-weight: 700;
+    }
+    .animation-panel select {
+      min-width: 168px;
+      border-radius: 10px;
+      border: 1px solid #ccb7a3;
+      background: white;
+      color: #3f3127;
+      font-size: 14px;
+      padding: 8px 10px;
+    }
+
     /* Scroll reveal animation (enabled only when JS adds .js on <html>) */
     .js .reveal {
       opacity: 0;
-      transform: translateY(26px);
-      filter: blur(2px);
+      transform: translate3d(var(--reveal-x, 0), var(--reveal-y, 26px), 0) scale(var(--reveal-scale, 1));
+      filter: blur(var(--reveal-blur, 2px));
       transition:
         opacity 0.7s ease,
         transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
@@ -186,8 +218,39 @@
     }
     .js .reveal.is-visible {
       opacity: 1;
-      transform: translateY(0);
+      transform: translate3d(0, 0, 0) scale(1);
       filter: blur(0);
+    }
+
+    html[data-anim="rise"] {
+      --reveal-x: 0;
+      --reveal-y: 26px;
+      --reveal-scale: 1;
+      --reveal-blur: 2px;
+    }
+    html[data-anim="slide-left"] {
+      --reveal-x: -34px;
+      --reveal-y: 0;
+      --reveal-scale: 1;
+      --reveal-blur: 1px;
+    }
+    html[data-anim="zoom"] {
+      --reveal-x: 0;
+      --reveal-y: 0;
+      --reveal-scale: 0.93;
+      --reveal-blur: 0;
+    }
+    html[data-anim="soft-blur"] {
+      --reveal-x: 0;
+      --reveal-y: 16px;
+      --reveal-scale: 0.985;
+      --reveal-blur: 5px;
+    }
+    html[data-anim="none"] .reveal {
+      opacity: 1 !important;
+      transform: none !important;
+      filter: none !important;
+      transition: none !important;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -207,6 +270,12 @@
     }
     @media (max-width: 720px) {
       .container { padding: 0 16px; }
+      .animation-panel {
+        top: auto;
+        bottom: 10px;
+        right: 10px;
+      }
+      .animation-panel select { min-width: 150px; }
       .hero-inner { padding: 42px 0 56px; }
       section.section { padding: 54px 0; }
       .features, .info-grid, .program-grid, .hosts-grid { grid-template-columns: 1fr; }
