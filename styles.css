@@ -172,26 +172,27 @@
     }
     .bottom-cta a:hover { background: #3a3029; }
 
-    /* Structure-level animation (enabled only when JS adds .js on <html>) */
-    .js .structure-section {
+    /* Scroll reveal animation (enabled only when JS adds .js on <html>) */
+    .js .reveal {
       opacity: 0;
-      transform: translateY(42px) scale(0.99);
-      filter: blur(3px);
+      transform: translateY(26px);
+      filter: blur(2px);
       transition:
         opacity 0.7s ease,
         transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
         filter 0.7s ease;
+      transition-delay: var(--reveal-delay, 0ms);
       will-change: opacity, transform, filter;
     }
-    .js .structure-section.is-visible {
+    .js .reveal.is-visible {
       opacity: 1;
-      transform: translateY(0) scale(1);
+      transform: translateY(0);
       filter: blur(0);
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .js .structure-section,
-      .js .structure-section.is-visible {
+      .js .reveal,
+      .js .reveal.is-visible {
         opacity: 1;
         transform: none;
         filter: none;
