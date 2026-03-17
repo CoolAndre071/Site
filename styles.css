@@ -171,6 +171,35 @@
       font-size: 18px; font-weight: 700; box-shadow: 0 14px 32px rgba(45,36,31,.18);
     }
     .bottom-cta a:hover { background: #3a3029; }
+
+    /* Scroll reveal animation (enabled only when JS adds .js on <html>) */
+    .js .reveal {
+      opacity: 0;
+      transform: translateY(26px);
+      filter: blur(2px);
+      transition:
+        opacity 0.7s ease,
+        transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+        filter 0.7s ease;
+      transition-delay: var(--reveal-delay, 0ms);
+      will-change: opacity, transform, filter;
+    }
+    .js .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .js .reveal,
+      .js .reveal.is-visible {
+        opacity: 1;
+        transform: none;
+        filter: none;
+        transition: none;
+      }
+    }
+
     @media (max-width: 980px) {
       .features, .info-grid, .program-grid, .hosts-grid { grid-template-columns: 1fr 1fr; }
       .audience-grid .audience-card { grid-column: span 6 !important; }
