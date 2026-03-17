@@ -4,9 +4,29 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Учебно-терапевтическая группа «ДЕНЬГИ»</title>
-  <link rel="stylesheet" href="styles.css?v=20260317-4" />
+  <link rel="stylesheet" href="styles.css?v=20260317-5" />
 </head>
 <body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="header-title">Animation Controls</div>
+      <div class="header-controls">
+        <label class="header-control" for="animationPreset">
+          <span>Animation</span>
+          <select id="animationPreset" name="animationPreset">
+            <option value="rise">Rise</option>
+            <option value="slide-left">Slide Left</option>
+            <option value="zoom">Zoom In</option>
+            <option value="soft-blur">Soft Blur</option>
+            <option value="none">None</option>
+          </select>
+        </label>
+        <button id="revealToggle" class="header-toggle" type="button" aria-pressed="true">
+          Replay: ON
+        </button>
+      </div>
+    </div>
+  </header>
   <main>
     <section class="hero">
       <div class="blob"></div>
@@ -199,16 +219,6 @@
       </div>
     </section>
   </main>
-  <aside class="animation-panel" aria-label="Animation list">
-    <label for="animationPreset">Animation</label>
-    <select id="animationPreset" name="animationPreset">
-      <option value="rise">Rise</option>
-      <option value="slide-left">Slide Left</option>
-      <option value="zoom">Zoom In</option>
-      <option value="soft-blur">Soft Blur</option>
-      <option value="none">None</option>
-    </select>
-  </aside>
-  <script src="script.js?v=20260317-4" defer></script>
+  <script src="script.js?v=20260317-5" defer></script>
 </body>
 </html>

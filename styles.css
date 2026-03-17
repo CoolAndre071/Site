@@ -172,36 +172,77 @@
     }
     .bottom-cta a:hover { background: #3a3029; }
 
-    /* Temporary animation switcher panel */
-    .animation-panel {
-      position: fixed;
-      top: 14px;
-      right: 14px;
-      z-index: 120;
-      background: rgba(255,255,255,.92);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 10px 12px;
-      box-shadow: var(--shadow);
+    /* Header controls (temporary, can be replaced with full nav later) */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 140;
+      border-bottom: 1px solid var(--line-soft);
+      background: rgba(248,244,239,.94);
       backdrop-filter: blur(8px);
     }
-    .animation-panel label {
-      display: block;
-      margin-bottom: 6px;
-      font-size: 11px;
+    .header-inner {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+    .header-title {
+      font-size: 13px;
+      font-weight: 700;
       letter-spacing: .08em;
       text-transform: uppercase;
       color: #6f5a49;
-      font-weight: 700;
+      white-space: nowrap;
     }
-    .animation-panel select {
-      min-width: 168px;
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .header-control {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #5a4739;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .header-control span {
+      font-size: 11px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .header-control select {
+      min-width: 154px;
       border-radius: 10px;
       border: 1px solid #ccb7a3;
       background: white;
       color: #3f3127;
       font-size: 14px;
       padding: 8px 10px;
+    }
+    .header-toggle {
+      border: 1px solid #bca894;
+      background: #2d241f;
+      color: white;
+      border-radius: 10px;
+      min-height: 38px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .18s ease;
+    }
+    .header-toggle:hover { background: #3a3029; }
+    .header-toggle.is-off {
+      background: white;
+      color: #3f3127;
     }
 
     /* Scroll reveal animation (enabled only when JS adds .js on <html>) */
@@ -270,12 +311,13 @@
     }
     @media (max-width: 720px) {
       .container { padding: 0 16px; }
-      .animation-panel {
-        top: auto;
-        bottom: 10px;
-        right: 10px;
+      .header-inner {
+        min-height: auto;
+        align-items: flex-start;
+        flex-direction: column;
       }
-      .animation-panel select { min-width: 150px; }
+      .header-controls { justify-content: flex-start; }
+      .header-control select { min-width: 140px; }
       .hero-inner { padding: 42px 0 56px; }
       section.section { padding: 54px 0; }
       .features, .info-grid, .program-grid, .hosts-grid { grid-template-columns: 1fr; }
