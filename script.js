@@ -4,6 +4,7 @@
 
   const STORAGE_KEY = "site-animation-preset";
   const REPLAY_STORAGE_KEY = "site-animation-replay-enabled";
+  const COLOR_STORAGE_KEY = "site-color-overrides";
   const DEFAULT_PRESET = "rise";
   const VALID_PRESETS = new Set([
     "rise",
@@ -15,6 +16,10 @@
 
   const presetSelect = document.querySelector("#animationPreset");
   const revealToggle = document.querySelector("#revealToggle");
+  const paletteReset = document.querySelector("#paletteReset");
+  const colorPickers = Array.from(
+    document.querySelectorAll(".palette-picker[data-color-var]")
+  );
   const revealSelectors = [
     ".hero .eyebrow",
     ".hero h1",
@@ -36,9 +41,54 @@
 
   let observer = null;
   let replayEnabled = true;
+  const defaultPalette = {};
 
   const normalizePreset = (value) =>
     VALID_PRESETS.has(value) ? value : DEFAULT_PRESET;
+
+  const normalizeHexColor = (value) => {
+    if (typeof value !== "string") {
+      return null;
+    }
+
+    const trimmed = value.trim().toLowerCase();
+    if (!trimmed) {
+      return null;
+    }
+
+    if (/^#[0-9a-f]{6}$/.test(trimmed)) {
+      return trimmed;
+    }
+
+    const shortHexMatch = trimmed.match(/^#([0-9a-f]{3})$/);
+    if (shortHexMatch) {
+      return `#${shortHexMatch[1]
+        .split("")
+        .map((chunk) => `${chunk}${chunk}`)
+        .join("")}`;
+    }
+
+    const rgbMatch = trimmed.match(/^rgba?\(([^)]+)\)$/);
+    if (!rgbMatch) {
+      return null;
+    }
+
+    const parts = rgbMatch[1]
+      .split(",")
+      .slice(0, 3)
+      .map((part) => Number.parseInt(part.trim(), 10));
+    const isValidRgb = parts.length === 3 && parts.every((part) => (
+      Number.isInteger(part) && part >= 0 && part <= 255
+    ));
+
+    if (!isValidRgb) {
+      return null;
+    }
+
+    return `#${parts
+      .map((part) => part.toString(16).padStart(2, "0"))
+      .join("")}`;
+  };
 
   const readStoredPreset = () => {
     try {
@@ -53,6 +103,24 @@
       return localStorage.getItem(REPLAY_STORAGE_KEY);
     } catch {
       return null;
+    }
+  };
+
+  const readStoredPalette = () => {
+    try {
+      const rawValue = localStorage.getItem(COLOR_STORAGE_KEY);
+      if (!rawValue) {
+        return {};
+      }
+
+      const parsed = JSON.parse(rawValue);
+      if (!parsed || typeof parsed !== "object") {
+        return {};
+      }
+
+      return parsed;
+    } catch {
+      return {};
     }
   };
 
@@ -72,6 +140,19 @@
     }
   };
 
+  const storePalette = (palette) => {
+    try {
+      if (!Object.keys(palette).length) {
+        localStorage.removeItem(COLOR_STORAGE_KEY);
+        return;
+      }
+
+      localStorage.setItem(COLOR_STORAGE_KEY, JSON.stringify(palette));
+    } catch {
+      /* ignore storage errors */
+    }
+  };
+
   const disconnectObserver = () => {
     if (observer) {
       observer.disconnect();
@@ -84,9 +165,76 @@
       return;
     }
 
-    revealToggle.textContent = replayEnabled ? "Replay: ON" : "Replay: OFF";
+    revealToggle.textContent = replayEnabled ? "Повтор: ВКЛ" : "Повтор: ВЫКЛ";
     revealToggle.classList.toggle("is-off", !replayEnabled);
     revealToggle.setAttribute("aria-pressed", String(replayEnabled));
+  };
+
+  const captureDefaultPalette = () => {
+    if (!colorPickers.length) {
+      return;
+    }
+
+    const computedStyle = getComputedStyle(root);
+    colorPickers.forEach((picker) => {
+      const variableName = picker.dataset.colorVar;
+      if (!variableName) {
+        return;
+      }
+
+      const variableValue = normalizeHexColor(
+        computedStyle.getPropertyValue(variableName)
+      );
+      if (!variableValue) {
+        return;
+      }
+
+      defaultPalette[variableName] = variableValue;
+      picker.value = variableValue;
+    });
+  };
+
+  const buildPaletteOverrides = () => {
+    const overrides = {};
+
+    colorPickers.forEach((picker) => {
+      const variableName = picker.dataset.colorVar;
+      if (!variableName || !defaultPalette[variableName]) {
+        return;
+      }
+
+      const pickerValue = normalizeHexColor(picker.value);
+      if (!pickerValue) {
+        return;
+      }
+
+      if (pickerValue !== defaultPalette[variableName]) {
+        overrides[variableName] = pickerValue;
+      }
+    });
+
+    return overrides;
+  };
+
+  const applyPalette = (palette) => {
+    colorPickers.forEach((picker) => {
+      const variableName = picker.dataset.colorVar;
+      if (!variableName) {
+        return;
+      }
+
+      const fallbackValue = defaultPalette[variableName];
+      const storedValue = normalizeHexColor(palette[variableName]);
+      const nextValue = storedValue || fallbackValue;
+      if (!nextValue) {
+        return;
+      }
+
+      root.style.setProperty(variableName, nextValue);
+      if (picker.value !== nextValue) {
+        picker.value = nextValue;
+      }
+    });
   };
 
   const runReveal = () => {
@@ -182,6 +330,8 @@
   const storedReplayMode = readStoredReplayMode();
   const initialReplayEnabled = storedReplayMode !== "off";
 
+  captureDefaultPalette();
+  applyPalette(readStoredPalette());
   setPreset(initialPreset, false);
   setReplayMode(initialReplayEnabled, false);
 
@@ -195,6 +345,26 @@
   if (revealToggle) {
     revealToggle.addEventListener("click", () => {
       setReplayMode(!replayEnabled, true);
+    });
+  }
+
+  colorPickers.forEach((picker) => {
+    picker.addEventListener("input", (event) => {
+      const variableName = event.target.dataset.colorVar;
+      const nextColor = normalizeHexColor(event.target.value);
+      if (!variableName || !nextColor) {
+        return;
+      }
+
+      root.style.setProperty(variableName, nextColor);
+      storePalette(buildPaletteOverrides());
+    });
+  });
+
+  if (paletteReset) {
+    paletteReset.addEventListener("click", () => {
+      applyPalette({});
+      storePalette({});
     });
   }
 

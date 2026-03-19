@@ -4,36 +4,65 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Учебно-терапевтическая группа «ДЕНЬГИ»</title>
-  <link rel="stylesheet" href="styles.css?v=20260319-2" />
+  <link rel="stylesheet" href="styles.css?v=20260319-3" />
 </head>
 <body>
   <header class="site-header">
     <div class="container header-inner">
       <div class="header-left">
-        <div class="header-title">Project Palette</div>
-        <div class="header-palette" aria-label="Site color palette">
-          <span class="palette-item"><span class="palette-swatch swatch-bg"></span><span>Background</span></span>
-          <span class="palette-item"><span class="palette-swatch swatch-surface"></span><span>Surface</span></span>
-          <span class="palette-item"><span class="palette-swatch swatch-text"></span><span>Text</span></span>
-          <span class="palette-item"><span class="palette-swatch swatch-muted"></span><span>Muted</span></span>
-          <span class="palette-item"><span class="palette-swatch swatch-accent"></span><span>Accent</span></span>
-          <span class="palette-item"><span class="palette-swatch swatch-accent-dark"></span><span>Accent Dark</span></span>
-          <span class="palette-item"><span class="palette-swatch swatch-line"></span><span>Borders</span></span>
+        <div class="header-title">Палитра проекта</div>
+        <div class="header-palette" aria-label="Палитра цветов сайта">
+          <label class="palette-item" for="colorBg">
+            <span class="palette-swatch swatch-bg"></span>
+            <span class="palette-name">Фон</span>
+            <input class="palette-picker" id="colorBg" type="color" data-color-var="--bg" aria-label="Цвет фона страницы" />
+          </label>
+          <label class="palette-item" for="colorSurface">
+            <span class="palette-swatch swatch-surface"></span>
+            <span class="palette-name">Карточки</span>
+            <input class="palette-picker" id="colorSurface" type="color" data-color-var="--card-solid" aria-label="Цвет карточек" />
+          </label>
+          <label class="palette-item" for="colorText">
+            <span class="palette-swatch swatch-text"></span>
+            <span class="palette-name">Текст</span>
+            <input class="palette-picker" id="colorText" type="color" data-color-var="--text" aria-label="Цвет основного текста" />
+          </label>
+          <label class="palette-item" for="colorMuted">
+            <span class="palette-swatch swatch-muted"></span>
+            <span class="palette-name">Вторичный текст</span>
+            <input class="palette-picker" id="colorMuted" type="color" data-color-var="--muted" aria-label="Цвет вторичного текста" />
+          </label>
+          <label class="palette-item" for="colorAccent">
+            <span class="palette-swatch swatch-accent"></span>
+            <span class="palette-name">Акцент</span>
+            <input class="palette-picker" id="colorAccent" type="color" data-color-var="--accent" aria-label="Акцентный цвет" />
+          </label>
+          <label class="palette-item" for="colorAccentDark">
+            <span class="palette-swatch swatch-accent-dark"></span>
+            <span class="palette-name">Темный акцент</span>
+            <input class="palette-picker" id="colorAccentDark" type="color" data-color-var="--accent-dark" aria-label="Темный акцентный цвет" />
+          </label>
+          <label class="palette-item" for="colorLine">
+            <span class="palette-swatch swatch-line"></span>
+            <span class="palette-name">Границы</span>
+            <input class="palette-picker" id="colorLine" type="color" data-color-var="--line" aria-label="Цвет границ" />
+          </label>
         </div>
+        <button id="paletteReset" class="palette-reset" type="button">Сбросить цвета</button>
       </div>
       <div class="header-controls">
         <label class="header-control" for="animationPreset">
-          <span>Animation</span>
+          <span>Анимация</span>
           <select id="animationPreset" name="animationPreset">
-            <option value="rise">Rise</option>
-            <option value="slide-left">Slide Left</option>
-            <option value="zoom">Zoom In</option>
-            <option value="soft-blur">Soft Blur</option>
-            <option value="none">None</option>
+            <option value="rise">Подъем</option>
+            <option value="slide-left">Сдвиг влево</option>
+            <option value="zoom">Приближение</option>
+            <option value="soft-blur">Мягкое размытие</option>
+            <option value="none">Без анимации</option>
           </select>
         </label>
         <button id="revealToggle" class="header-toggle" type="button" aria-pressed="true">
-          Replay: ON
+          Повтор: ВКЛ
         </button>
       </div>
     </div>
@@ -230,6 +259,6 @@
       </div>
     </section>
   </main>
-  <script src="script.js?v=20260317-5" defer></script>
+  <script src="script.js?v=20260319-1" defer></script>
 </body>
 </html>
