@@ -193,6 +193,13 @@
       padding-top: 10px;
       padding-bottom: 10px;
     }
+    .header-left {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1 1 auto;
+    }
     .header-title {
       font-size: 13px;
       font-weight: 700;
@@ -201,6 +208,41 @@
       color: #6f5a49;
       white-space: nowrap;
     }
+    .header-palette {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .palette-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 26px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.72);
+      color: #4d3d31;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .01em;
+      white-space: nowrap;
+    }
+    .palette-swatch {
+      width: 11px;
+      height: 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(45,36,31,.25);
+      flex: 0 0 11px;
+    }
+    .swatch-bg { background: var(--bg); }
+    .swatch-surface { background: var(--card-solid); }
+    .swatch-text { background: var(--text); }
+    .swatch-muted { background: var(--muted); }
+    .swatch-accent { background: var(--accent); }
+    .swatch-accent-dark { background: var(--accent-dark); }
+    .swatch-line { background: var(--line); }
     .header-controls {
       display: flex;
       align-items: center;
@@ -326,7 +368,10 @@
         align-items: flex-start;
         flex-direction: column;
       }
+      .header-left { width: 100%; gap: 6px; }
       .header-title { font-size: 12px; }
+      .header-palette { gap: 6px; }
+      .palette-item { font-size: 11px; padding: 4px 8px; min-height: 24px; }
       .header-controls { width: 100%; justify-content: flex-start; gap: 8px; }
       .header-control { width: 100%; justify-content: space-between; }
       .header-control select { min-width: 0; width: 100%; }
@@ -356,6 +401,7 @@
     @media (max-width: 520px) {
       .container { padding: 0 14px; }
       .hero .container { padding: 0 18px; }
+      .palette-item { font-size: 10px; padding: 3px 7px; min-height: 22px; }
       .hero-inner { padding: 36px 0 48px; }
       .lead { font-size: 17px; }
       .section-kicker { letter-spacing: .12em; font-size: 11px; }
