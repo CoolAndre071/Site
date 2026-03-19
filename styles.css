@@ -320,6 +320,7 @@
     }
     @media (max-width: 720px) {
       .container { padding: 0 16px; }
+      .hero .container { padding: 0 20px; }
       .header-inner {
         min-height: auto;
         align-items: flex-start;
@@ -354,6 +355,7 @@
     }
     @media (max-width: 520px) {
       .container { padding: 0 14px; }
+      .hero .container { padding: 0 18px; }
       .hero-inner { padding: 36px 0 48px; }
       .lead { font-size: 17px; }
       .section-kicker { letter-spacing: .12em; font-size: 11px; }
