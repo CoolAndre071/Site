@@ -90,6 +90,40 @@
       .join("")}`;
   };
 
+  const hexToRgb = (hexColor) => {
+    const normalized = normalizeHexColor(hexColor);
+    if (!normalized) {
+      return null;
+    }
+
+    return {
+      r: Number.parseInt(normalized.slice(1, 3), 16),
+      g: Number.parseInt(normalized.slice(3, 5), 16),
+      b: Number.parseInt(normalized.slice(5, 7), 16),
+    };
+  };
+
+  const rgbToHex = ({ r, g, b }) => `#${[r, g, b]
+    .map((channel) => Math.round(channel).toString(16).padStart(2, "0"))
+    .join("")}`;
+
+  const mixHexColors = (baseColor, targetColor, targetWeight) => {
+    const base = hexToRgb(baseColor);
+    const target = hexToRgb(targetColor);
+    if (!base || !target) {
+      return null;
+    }
+
+    const clampedWeight = Math.min(1, Math.max(0, targetWeight));
+    const baseWeight = 1 - clampedWeight;
+
+    return rgbToHex({
+      r: (base.r * baseWeight) + (target.r * clampedWeight),
+      g: (base.g * baseWeight) + (target.g * clampedWeight),
+      b: (base.b * baseWeight) + (target.b * clampedWeight),
+    });
+  };
+
   const readStoredPreset = () => {
     try {
       return localStorage.getItem(STORAGE_KEY);
@@ -170,6 +204,27 @@
     revealToggle.setAttribute("aria-pressed", String(replayEnabled));
   };
 
+  const syncLinkedPalette = () => {
+    const computedStyle = getComputedStyle(root);
+    const bg = normalizeHexColor(computedStyle.getPropertyValue("--bg"));
+    const card = normalizeHexColor(
+      computedStyle.getPropertyValue("--card-solid")
+    );
+    const accent = normalizeHexColor(computedStyle.getPropertyValue("--accent"));
+    const text = normalizeHexColor(computedStyle.getPropertyValue("--text"));
+    const line = normalizeHexColor(computedStyle.getPropertyValue("--line"));
+
+    if (!bg || !card || !accent || !text || !line) {
+      return;
+    }
+
+    root.style.setProperty("--bg-soft", mixHexColors(bg, accent, 0.08));
+    root.style.setProperty("--bg-warm", mixHexColors(bg, accent, 0.2));
+    root.style.setProperty("--accent-soft", mixHexColors(accent, card, 0.75));
+    root.style.setProperty("--text-soft", mixHexColors(text, card, 0.2));
+    root.style.setProperty("--line-soft", mixHexColors(line, card, 0.4));
+  };
+
   const captureDefaultPalette = () => {
     if (!colorPickers.length) {
       return;
@@ -235,6 +290,8 @@
         picker.value = nextValue;
       }
     });
+
+    syncLinkedPalette();
   };
 
   const runReveal = () => {
@@ -357,6 +414,7 @@
       }
 
       root.style.setProperty(variableName, nextColor);
+      syncLinkedPalette();
       storePalette(buildPaletteOverrides());
     });
   });
